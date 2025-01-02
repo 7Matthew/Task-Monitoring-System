@@ -33,6 +33,7 @@ class TaskController extends Controller
         //
         return Inertia::render('Tasks/Index', [
             'tasks' => Task::with('user:id,name')->latest()->get(),
+            'users' => User::all(),
         ]);
     }
 

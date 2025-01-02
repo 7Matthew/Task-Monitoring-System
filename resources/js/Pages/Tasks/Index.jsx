@@ -5,7 +5,7 @@ import PrimaryButton from "@/Components/PrimaryButton";
 import { useForm, Head } from "@inertiajs/react";
 import Task from "@/Components/Task";
 
-export default function Index({ auth, tasks }) {
+export default function Index({ auth, tasks, users }) {
     const { data, setData, post, processing, reset, errors } = useForm({
         title: "",
         description: "",
@@ -59,16 +59,19 @@ export default function Index({ auth, tasks }) {
                     </div>
                     <div className="my-5">
                         <label for="assignedTo"> Assigned To </label>
-                        <input
-                            type="text"
-                            maxLength={50}
-                            value={data.assignedTo}
-                            placeholder="Add title here"
+                        <select
                             className="block w-full border-gray-300 focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 rounded-md shadow-sm"
+                            name="assignedTo"
+                            id="assignedTo"
+                            value={data.assignedTo}
                             onChange={(e) =>
                                 setData("assignedTo", e.target.value)
                             }
-                        />
+                        >
+                            {users.map((user) => (
+                                <option value={user.name}>{user.name}</option>
+                            ))}
+                        </select>
                     </div>
                     <InputError message={errors.title} className="mt-2" />
                     <InputError message={errors.description} className="mt-2" />

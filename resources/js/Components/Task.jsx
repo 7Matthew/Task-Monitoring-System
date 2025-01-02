@@ -53,6 +53,7 @@ export default function Task({ users, task }) {
                                 <label for="Description"> Description </label>
                                 <textarea
                                     name="Description"
+                                    maxLength={255}
                                     value={data.description}
                                     placeholder="What to do?"
                                     className="block w-full border-gray-300 focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 rounded-md shadow-sm"
@@ -75,7 +76,7 @@ export default function Task({ users, task }) {
                             </div>
                             <div className="my-5">
                                 <label for="assignedTo"> Assigned To </label>
-                                <input
+                                {/* <input
                                     type="text"
                                     maxLength={50}
                                     value={data.assignedTo}
@@ -84,20 +85,38 @@ export default function Task({ users, task }) {
                                     onChange={(e) =>
                                         setData("assignedTo", e.target.value)
                                     }
-                                />
+                                /> */}
+                                <select
+                                    className="block w-full border-gray-300 focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 rounded-md shadow-sm"
+                                    name="assignedTo"
+                                    id="assignedTo"
+                                    value={data.assignedTo}
+                                    onChange={(e) =>
+                                        setData("assignedTo", e.target.value)
+                                    }
+                                >
+                                    {users.map((user) => (
+                                        <option value={user.name}>
+                                            {user.name}
+                                        </option>
+                                    ))}
+                                </select>
                             </div>
                             <div className="my-5">
                                 <label for="status"> Set status To </label>
-                                <input
-                                    type="text"
-                                    maxLength={15}
-                                    value={data.status}
-                                    placeholder="Add title here"
+                                <select
                                     className="block w-full border-gray-300 focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 rounded-md shadow-sm"
+                                    name="status"
+                                    id="status"
+                                    value={data.status}
                                     onChange={(e) =>
                                         setData("status", e.target.value)
                                     }
-                                />
+                                >
+                                    <option value="Pending">Pending</option>
+                                    <option value="On-going">On-going</option>
+                                    <option value="Done">Done</option>
+                                </select>
                             </div>
                             <div className="space-x-2">
                                 <PrimaryButton className="mt-4">
@@ -128,12 +147,12 @@ export default function Task({ users, task }) {
                                     >
                                         <g
                                             id="SVGRepo_bgCarrier"
-                                            stroke-width="0"
+                                            strokeWidth="0"
                                         ></g>
                                         <g
                                             id="SVGRepo_tracerCarrier"
-                                            stroke-linecap="round"
-                                            stroke-linejoin="round"
+                                            strokeLinecap="round"
+                                            strokeLinejoin="round"
                                         ></g>
                                         <g id="SVGRepo_iconCarrier">
                                             {" "}
@@ -141,45 +160,55 @@ export default function Task({ users, task }) {
                                                 opacity="0.4"
                                                 d="M12.3691 8.87988H17.6191"
                                                 stroke="#292D32"
-                                                stroke-width="1.5"
-                                                stroke-linecap="round"
-                                                stroke-linejoin="round"
+                                                strokeWidth="1.5"
+                                                strokeLinecap="round"
+                                                strokeLinejoin="round"
                                             ></path>{" "}
                                             <path
                                                 opacity="0.4"
                                                 d="M6.38086 8.87988L7.13086 9.62988L9.38086 7.37988"
                                                 stroke="currentColor"
-                                                stroke-width="1.5"
-                                                stroke-linecap="round"
-                                                stroke-linejoin="round"
+                                                strokeWidth="1.5"
+                                                strokeLinecap="round"
+                                                strokeLinejoin="round"
                                             ></path>{" "}
                                             <path
                                                 opacity="0.4"
                                                 d="M12.3691 15.8799H17.6191"
                                                 stroke="currentColor"
-                                                stroke-width="1.5"
-                                                stroke-linecap="round"
-                                                stroke-linejoin="round"
+                                                strokeWidth="1.5"
+                                                strokeLinecap="round"
+                                                strokeLinejoin="round"
                                             ></path>{" "}
                                             <path
                                                 opacity="0.4"
                                                 d="M6.38086 15.8799L7.13086 16.6299L9.38086 14.3799"
                                                 stroke="currentColor"
-                                                stroke-width="1.5"
-                                                stroke-linecap="round"
-                                                stroke-linejoin="round"
+                                                strokeWidth="1.5"
+                                                strokeLinecap="round"
+                                                strokeLinejoin="round"
                                             ></path>{" "}
                                             <path
                                                 d="M9 22H15C20 22 22 20 22 15V9C22 4 20 2 15 2H9C4 2 2 4 2 9V15C2 20 4 22 9 22Z"
                                                 stroke="currentColor"
-                                                stroke-width="1.5"
-                                                stroke-linecap="round"
-                                                stroke-linejoin="round"
+                                                strokeWidth="1.5"
+                                                strokeLinecap="round"
+                                                strokeLinejoin="round"
                                             ></path>{" "}
                                         </g>
                                     </svg>
                                     <h2 className="mt-4 text-lg text-gray-900 overflow: hidden;">
-                                        {task.title}
+                                        {task.title}{" "}
+                                        <small className="ml-2 text-xs text-gray-600">
+                                            {dayjs(task.created_at).fromNow()}
+                                        </small>
+                                        {task.created_at !==
+                                            task.updated_at && (
+                                            <small className="text-sm text-gray-600">
+                                                {" "}
+                                                &middot; edited
+                                            </small>
+                                        )}
                                     </h2>
                                     <span className="text-gray-800 text-xs">
                                         Created by: {task.user.name}
@@ -187,20 +216,13 @@ export default function Task({ users, task }) {
                                     <h2 className="text-gray-800 text-xs">
                                         Assigned to: {task.assignedTo}
                                     </h2>
-                                    <small className="ml-2 text-xs text-gray-600">
-                                        {dayjs(task.created_at).fromNow()}
-                                    </small>
-                                    {task.created_at !== task.updated_at && (
-                                        <small className="text-sm text-gray-600">
-                                            {" "}
-                                            &middot; edited
-                                        </small>
-                                    )}
                                 </div>
                             </div>
-                            <p className="mt-4 text-lg text-gray-900">
-                                {task.description}
-                            </p>
+                            <div className="container overflow-hidden">
+                                <p className="mt-4 text-lg container-fluid text-gray-900">
+                                    {task.description}
+                                </p>
+                            </div>
                         </>
                     )}
                 </div>

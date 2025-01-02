@@ -1,11 +1,13 @@
 <?php
 
-use App\Http\Controllers\ProfileController;
-use App\Http\Controllers\TaskController;
-use Illuminate\Foundation\Application;
-use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\FileUploadController;
+use App\Models\Task;
+use App\Models\User;
 use Inertia\Inertia;
+use Illuminate\Support\Facades\Route;
+use Illuminate\Foundation\Application;
+use App\Http\Controllers\TaskController;
+use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\FileUploadController;
 
 Route::get('/', function () {
     return Inertia::render('Welcome', [
@@ -17,7 +19,10 @@ Route::get('/', function () {
 });
 
 Route::get('/dashboard', function () {
-    return Inertia::render('Dashboard');
+    return Inertia::render('Dashboard',[
+            'tasks' => Task::with('user:id,name')->latest()->get(),
+            'users' => User::all(),
+        ]);
 })->middleware(['auth', 'verified'])->name('dashboard');
 
 Route::post('/upload', [FileUploadController::class, 'upload'])->name('upload');
